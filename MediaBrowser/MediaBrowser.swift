@@ -304,7 +304,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         pagingScrollView.delegate = nil
         NotificationCenter.default.removeObserver(self)
         releaseAllUnderlyingPhotos(preserveCurrent: false)
-        SDImageCache.shared().clearMemory() // clear memory
+        SDImageCache.shared.clearMemory() // clear memory
     }
 
     private func releaseAllUnderlyingPhotos(preserveCurrent: Bool) {
@@ -731,9 +731,10 @@ func floorcgf(x: CGFloat) -> CGFloat {
      - Parameter parent: UIViewController
      */
     open override func willMove(toParent parent: UIViewController?) {
-        if parent != nil && hasBelongedToViewController {
-            fatalError("MediaBrowser Instance Reuse")
-        }
+        // Workaround that prevents a crash when viewing a photo and switching to another UDisc tab and back
+//        if parent != nil && hasBelongedToViewController {
+//            fatalError("MediaBrowser Instance Reuse")
+//        }
 
         if let navBar = navigationController?.navigationBar, didSavePreviousStateOfNavBar, parent == nil {
             navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:previousNavigationBarTextColor ?? UIColor.black]
