@@ -632,7 +632,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         }
         
         // Set style
-        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if !leaveStatusBarAlone && UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             previousStatusBarStyle = UIApplication.shared.statusBarStyle
             UIApplication.shared.setStatusBarStyle(statusBarStyle, animated: animated)
         }
@@ -717,7 +717,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         setControlsHidden(hidden: false, animated: false, permanent: true)
         
         // Status bar
-        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if !leaveStatusBarAlone && UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             UIApplication.shared.setStatusBarStyle(previousStatusBarStyle, animated: animated)
         }
 
@@ -1153,7 +1153,15 @@ func floorcgf(x: CGFloat) -> CGFloat {
     func frameForCaptionView(captionView: MediaCaptionView?, index: Int) -> CGRect {
         if let cw = captionView {
             let pageFrame = frameForPageAtIndex(index: index)
-            let captionSize = cw.sizeThatFits(CGSize(width: pageFrame.size.width, height: 0.0))
+            var yOffset: CGFloat = 0.0
+            if !areControlsHidden {
+                if let navBar = navigationController?.navigationBar {
+                    yOffset = navBar.frame.origin.y + navBar.frame.size.height
+                }
+            }
+
+//            let captionSize = CGSize(width: pageFrame.size.width, height:)
+//
             
             var safeAreaBottomInset: CGFloat = 0
             if #available(iOS 11.0, *) {
@@ -1162,9 +1170,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
             
             let captionFrame = CGRect(
                 x: pageFrame.origin.x,
-                y: pageFrame.size.height - safeAreaBottomInset - captionSize.height - (toolbar.superview != nil ? toolbar.frame.size.height : 0.0),
+                y: yOffset,
                 width: pageFrame.size.width,
-                height: captionSize.height)
+                height:  pageFrame.size.height - yOffset - safeAreaBottomInset)
             
             return captionFrame.integral
         }

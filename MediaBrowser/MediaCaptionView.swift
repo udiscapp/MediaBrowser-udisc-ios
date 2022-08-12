@@ -10,7 +10,7 @@
 import UIKit
 
 /// MediaCaptionView is based in UIToolbar
-public class MediaCaptionView: UIToolbar {
+open class MediaCaptionView: UIToolbar {
     private var media: Media?
     private var label = UILabel()
     
